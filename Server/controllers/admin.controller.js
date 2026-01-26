@@ -5,15 +5,22 @@ import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 import Admin from '../models/admin.model.js'
 import { Book } from "../models/book.model.js"
-
+import redisClient from "../config/redis.js"
 export const getAllStudents = async(req, res, next) => {
   try{
+    const DEFAULT_EXPIRATION = 3600
+    const cachedStudents = await redisClient.get('students')
+    if(cachedStudents){
+      return res.status(200).json({
+        success: true,
+        students: JSON.parse(cachedStudents)
+      })
+    } 
     const students = await Student.find({})
+    await redisClient.setEx('students', DEFAULT_EXPIRATION, JSON.stringify(students))
     res.status(200).json({
       success: true,
-      data: {
-        students
-      }
+      students
     })
   }
   catch(error){
@@ -70,7 +77,7 @@ export const signinAdmin = async (req, res, next) => {
 
 export const addBook = async (req, res, next) => {
   try{
-    const { title, copies, author, isbn } = req.body
+    const { title, copies, author, isbn, genre } = req.body
     const availBooks = await Book.findOne({ isbn: isbn })
     if(availBooks){
       return res.json({
@@ -83,6 +90,7 @@ export const addBook = async (req, res, next) => {
       count: copies,
       author,
       isbn,
+      genre,
       with: []
     })
     return res.status(200).json({

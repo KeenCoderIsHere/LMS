@@ -3,11 +3,20 @@ import { Book } from "../models/book.model.js"
 import jwt from 'jsonwebtoken'
 import { Student } from "../models/student.model.js"
 import { Record } from "../models/record.model.js"
-
+import redisClient from '../config/redis.js'
 export const getBooks = async (req, res, next) => {
   try{
-    const books = await Book.find({ count: { $gt : 0 }})
-    res.status(200).json({
+    const DEFAULT_EXPIRATION = 3600
+    const cachedBooks = await redisClient.get('books')
+    if(cachedBooks){
+      return res.status(200).json({
+        success: true,
+        books: JSON.parse(cachedBooks)
+      })
+    }
+    const books = await Book.find({ count: {$gt: 0} })
+    await redisClient.setEx('books', DEFAULT_EXPIRATION, JSON.stringify(books))
+    return res.status(200).json({
       success: true,
       books
     })
@@ -26,14 +35,19 @@ export const getBorrowedBooks = async (req, res, next) => {
     const requiredData = []
     for(let book of borrowedBooks){
       const bookData = await Book.findById(book.bookId)
-      requiredData.push({
+      if(bookData){
+        requiredData.push({
         title: bookData.title,
         isbn: bookData.isbn,
         author: bookData.author,
         genre: bookData.genre,
         borrowedDate: book.borrowedDate,
         dueDate: book.dueDate,
-      })
+        })
+      }
+      else{
+        console.error(`Book with Book ID ${book.bookId} not found in database`)
+      }
     }
     res.status(200).json({
       success: true,
@@ -84,13 +98,14 @@ export const  borrow = async (req, res, next) => {
     )
     const x = await Student.findByIdAndUpdate(
       student._id,
-      { $push: { booksBorrowed: bookId },
+      { $push: { booksBorrowed: book.isbn },
         $inc: { booksBorrowedCount: 1 }
       },
       { new: true }
     )
     const y = await Record.insertOne({
-      bookId,
+      isbn: book.isbn,
+      title: book.title,
       studentEmail: student.email,
       borrowedDate: new Date(Date.now()),
       dueDate: new Date(Date.now() + 5*24*60*60*1000)

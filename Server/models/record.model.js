@@ -1,8 +1,12 @@
 import mongoose, { mongo } from "mongoose"
 
 const recordSchema = new mongoose.Schema({
-  bookId: {
-    type: mongoose.Schema.Types.ObjectId,
+  isbn: {
+    type: String,
+    required: true
+  },
+  title: {
+    type: String,
     required: true
   },
   studentEmail: {
