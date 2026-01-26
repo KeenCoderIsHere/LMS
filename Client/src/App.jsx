@@ -9,6 +9,9 @@ import StudentDashboard from './components/StudentDashboard'
 import Books from './components/Books'
 import BorrowedBooks from './components/BorrowedBooks'
 import AdminAddBook from './components/AdminAddBook'
+import ViewStudents from './components/ViewStudents'
+import AdminBooks from './components/AdminBooks'
+import Records from './components/Records'
 const App = () => {
   return (
     <>
@@ -17,6 +20,9 @@ const App = () => {
           <Route path='/' element={<LandingPage />}/>
             <Route path='/admin/signin' element={<AdminSignIn />}/>
             <Route path='/admin/dashboard' element={<AdminDashboard />}/>
+            <Route path='/admin/dashboard/view-all-students' element={<ViewStudents />}/>
+            <Route path='/admin/dashboard/view-all-records' element={<Records />}/>
+            <Route path='/admin/dashboard/view-all-books' element={<AdminBooks />}/>
             <Route path='/admin/dashboard/add-book' element={<AdminAddBook/>}/>
             <Route path='/student/signin' element={<StudentSignIn/>}/>
             <Route path='/student/signup' element={<StudentSignUp />}/>

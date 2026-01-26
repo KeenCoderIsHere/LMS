@@ -10,6 +10,7 @@ const AdminAddBook = () => {
   const [isbn,setIsbn] = useState(0)
   const [copies,setCopies] = useState(0)
   const [author,setAuthor] = useState('')
+  const [genre,setGenre] = useState('')
   const validate = () => {
     if(title.trim().length == 0){
       setError(`Title field is mandatory!`)
@@ -25,6 +26,10 @@ const AdminAddBook = () => {
     }
     if(author.trim().length == 0){
       setError(`Author field is mandatory!`)
+      return false
+    }
+    if(genre.trim().length == 0){
+      setError(`Genre field is mandatory!`)
       return false
     }
     return true
@@ -47,7 +52,8 @@ const AdminAddBook = () => {
           title,
           author,
           copies,
-          isbn
+          isbn,
+          genre
         })
       })
       const res = await response.json()
@@ -84,6 +90,7 @@ const AdminAddBook = () => {
         </div>
       }
       <div className='flex flex-col p-5'>
+        <div onClick={() => navigate(-1)} className="fixed top-0 left-0 p-4 cursor-pointer hover:text-blue-700 duration-300 transition-all ease-in-out text-white z-50 text-2xl">←Back</div>
         <div className='text-3xl text-white text-center'>Add Book Form</div>
         <div className='flex flex-col gap-y-7 items-center mt-20'>
           <label className='text-white text-center'>
@@ -101,6 +108,10 @@ const AdminAddBook = () => {
           <label className='text-white text-center'>
             Enter number of book copies available: 
             <input placeholder='' className='ml-5 text-black px-2 py-1' type='number' required value={copies} onChange={e => setCopies(parseInt(e.target.value))}/>
+          </label>
+          <label className='text-white text-center'>
+            Enter the book genre: 
+            <input placeholder='' className='ml-5 text-black px-2 py-1' type='text' required value={genre} onChange={e => setGenre(e.target.value)}/>
           </label>
           <button type='submit' className='text-blue-500 hover:text-blue-700 hover:underline cursor-pointer duration-300 transition-all ease-in-out' onClick={() => handleSubmit()}>Submit</button>
         </div>

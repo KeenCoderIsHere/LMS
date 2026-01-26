@@ -3,10 +3,9 @@
   import { useEffect } from 'react'
   import { useNavigate } from 'react-router-dom'
   import { Link } from 'react-router-dom'
-  const Books = () => {
+  //import redisClient from '../../../Server/config/redis'
+  const AdminBooks = () => {
     const [searchQuery,setSearchQuery] = useState('')
-    const [isBorrowing,setIsBorrowing] = useState(false)
-    const [showAlreadyBorrowedBox,setShowAlreadyBorrowedBox] = useState(false)
     if(!localStorage.getItem('token')){
       return(
         <>
@@ -42,72 +41,9 @@
           setLoading(false)
         }
     }
-    const checkIfBookAlreadyBorrowed = async (id) => {
-      try{
-        setLoading(true)
-        const token = localStorage.getItem('token')
-        const response = await fetch('http://localhost:5500/api/v1/student/view-borrowed-books', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/type',
-            'Authorization': `Bearer ${token}`
-          }
-        })
-        const res = await response.json()
-        for(let book of res.data){
-          if(book.bookId.toString() === id.toString()){
-            return true
-          }
-        }
-        return false
-      }
-      catch(error){
-        console.log(error)
-      }
-      finally{
-        setLoading(false)
-      }
-    }
     useEffect(() => {
       fetchData()
     },[])
-    const handleBorrow = async (id) => {
-      if(isBorrowing) return
-      try{
-        const result = await checkIfBookAlreadyBorrowed(id)
-        if(result){
-          setShowAlreadyBorrowedBox(true)
-          return
-        }
-        const token = localStorage.getItem('token')
-        const response = await fetch(`http://localhost:5500/api/v1/student/borrow/${id}`, {
-          method: "GET",
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          }
-        })
-        const res = await response.json()
-        if(!res.success){
-          if(res.message === "You cannot borrow a book you already have!"){
-            setShowAlreadyBorrowedBox(true)
-          }
-          else{
-            alert('Book borrow failed!')
-          }
-        }
-        else{
-          alert('Book successfully borrowed!')
-          navigate('/student/dashboard')
-        }
-      }
-      catch(error){
-        console.error(error)
-      }
-      finally{
-        setIsBorrowing(false)
-      }
-    }
     if(loading){
       return(
         <div className="flex flex-col items-center justify-center space-y-2 min-h-screen">
@@ -115,23 +51,6 @@
           <span className="text-sm font-medium text-white">Loading...</span>
         </div>
       )
-    }
-    if (showAlreadyBorrowedBox) {
-    return (
-      <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4">
-        <div className="w-full max-w-md border-2 border-slate-700 rounded-xl p-8 shadow-2xl flex flex-col items-center gap-y-6">
-          <div className="text-white text-xl text-center leading-relaxed">
-            You cannot borrow a book which you have already borrowed!
-          </div>
-          <button 
-            onClick={() => setShowAlreadyBorrowedBox(false)}
-            className="text-blue-500 hover:text-blue-700 hover:underline cursor-pointer duration-300 transition-all ease-in-out"
-          >
-            Got it
-          </button>
-        </div>
-      </div>
-    )
     }
     return (
       <>
@@ -194,7 +113,6 @@
                     <td>{book.author}</td>
                     <td>{book.genre}</td>
                     <td>{book.count}</td>
-                    <td><button disabled={isBorrowing} className='text-blue-500 hover:text-blue-700 hover:underline cursor-pointer duration-300 transition-all ease-in-out' onClick={() => handleBorrow(book._id)}>Borrow</button></td>
                   </tr>
                 })
               }
@@ -210,4 +128,4 @@
     )
   }
 
-  export default Books
+  export default AdminBooks

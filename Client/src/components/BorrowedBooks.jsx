@@ -31,6 +31,7 @@ const BorrowedBooks = () => {
         const res = await response.json()
         setBorrowedBooks(res)
         setFilteredData(res.data)
+        console.log(res)
       }
       catch(error){
         console.log(error)
