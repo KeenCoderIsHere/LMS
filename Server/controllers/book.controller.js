@@ -7,7 +7,7 @@ import redisClient from '../config/redis.js'
 export const getBooks = async (req, res, next) => {
   try{
     const DEFAULT_EXPIRATION = 3600
-    const cachedBooks = await redisClient.get('books')
+    const cachedBooks = await redisClient.get('lms:books')
     if(cachedBooks){
       return res.status(200).json({
         success: true,
@@ -15,7 +15,11 @@ export const getBooks = async (req, res, next) => {
       })
     }
     const books = await Book.find({ count: {$gt: 0} })
-    await redisClient.setEx('books', DEFAULT_EXPIRATION, JSON.stringify(books))
+    await redisClient.setEx(
+      'lms:books',
+      DEFAULT_EXPIRATION,
+      JSON.stringify(books)
+    )
     return res.status(200).json({
       success: true,
       books
@@ -97,7 +101,7 @@ export const  borrow = async (req, res, next) => {
       { $inc: { count: -1 } },
       { new: true }
     )
-    await redisClient.del('books')
+    await redisClient.del('lms:books')
     const x = await Student.findByIdAndUpdate(
       student._id,
       { $push: { booksBorrowed: book._id },
@@ -144,7 +148,7 @@ export const returnBook = async (req, res, next) => {
       { $inc: { count: 1 } },
       { new: true }
     )
-    await redisClient.del('books')
+    await redisClient.del('lms:books')
     const result = await Student.findByIdAndUpdate(
       decoded.student,
       { $pull: { booksBorrowed: bookId },
