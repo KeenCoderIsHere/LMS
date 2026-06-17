@@ -34,15 +34,16 @@ export const getBorrowedBooks = async (req, res, next) => {
     const borrowedBooks = await Record.find({ studentEmail: student.email })
     const requiredData = []
     for(let book of borrowedBooks){
-      const bookData = await Book.findById(book.bookId)
-      if(bookData){
+      const bookData = await Book.find({title: book.title})
+      if(bookData[0]){
         requiredData.push({
-        title: bookData.title,
-        isbn: bookData.isbn,
-        author: bookData.author,
-        genre: bookData.genre,
+        title: bookData[0].title,
+        isbn: bookData[0].isbn,
+        author: bookData[0].author,
+        genre: bookData[0].genre,
         borrowedDate: book.borrowedDate,
         dueDate: book.dueDate,
+        bookId: bookData[0]._id
         })
       }
       else{
@@ -67,7 +68,7 @@ export const  borrow = async (req, res, next) => {
     const token = req.headers.authorization?.split(' ')[1]
     const decoded = jwt.verify(token, JWT_SECRET)
     const student = await Student.findById(decoded.student)
-    const found = false
+    let found = false
     for(let book of student.booksBorrowed){
       if(book.toString() === bookId.toString()){
         found = true
@@ -96,13 +97,17 @@ export const  borrow = async (req, res, next) => {
       { $inc: { count: -1 } },
       { new: true }
     )
+    await redisClient.del('books')
     const x = await Student.findByIdAndUpdate(
       student._id,
-      { $push: { booksBorrowed: book.isbn },
+      { $push: { booksBorrowed: book._id },
         $inc: { booksBorrowedCount: 1 }
       },
       { new: true }
     )
+    console.log("Student after update:")
+    console.log(x)
+    console.log("booksBorrowed:", x.booksBorrowed)
     const y = await Record.insertOne({
       isbn: book.isbn,
       title: book.title,
@@ -123,11 +128,11 @@ export const  borrow = async (req, res, next) => {
 
 export const returnBook = async (req, res, next) => {
   try{
-    const isbn = req.params.bookId
+    const bookId = req.params.bookId
     const token = req.headers?.authorization?.split(' ')[1]
     const decoded = jwt.verify(token, JWT_SECRET)
     const student = await Student.findById(decoded.student)
-    const found = student.booksBorrowed.some(id => id.toString() === isbn.toString())
+    const found = student.booksBorrowed.some(id => id.toString() === bookId.toString())
     if(found === false){
       return res.status(404).json({
         success: false,
@@ -135,18 +140,20 @@ export const returnBook = async (req, res, next) => {
       })
     }
     const y = await Book.findByIdAndUpdate(
-      isbn,
+      bookId,
       { $inc: { count: 1 } },
       { new: true }
     )
+    await redisClient.del('books')
     const result = await Student.findByIdAndUpdate(
       decoded.student,
-      { $pull: { booksBorrowed: isbn },
+      { $pull: { booksBorrowed: bookId },
         $inc: { booksBorrowedCount: -1 }
       },
       { new: true }
     )
-    const x = await Record.findOneAndDelete({ isbn, studentEmail: student.email })
+    const book = await Book.findById(bookId)
+    const x = await Record.findOneAndDelete({ isbn: book.isbn, studentEmail: student.email })
     res.json({
       success: true,
       message: "Book returned successfully!",
@@ -157,6 +164,7 @@ export const returnBook = async (req, res, next) => {
     })
   }
   catch(error){
+    console.error(error)
     next(error)
   }
 }
