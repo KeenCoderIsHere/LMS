@@ -55,6 +55,7 @@ const BorrowedBooks = () => {
         }
       })
       const res = await response.json() 
+      console.log(res)
       if(!res.success){
         alert(`Book return operation failed!`)
       }
@@ -142,7 +143,7 @@ const BorrowedBooks = () => {
             <td>{new Date(book.dueDate).toDateString()}</td>
             <td>
               <div 
-                onClick={() => handleReturn(book.isbn)} 
+                onClick={() => handleReturn(book.bookId)} 
                 className='text-blue-500 hover:text-blue-700 hover:underline cursor-pointer duration-300 transition-all ease-in-out'
               >
                 Return

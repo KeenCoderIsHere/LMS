@@ -59,7 +59,7 @@ const AdminSignIn = () => {
   }
   return (
     <>
-    <div onClick={() => navigate(-1)} className="fixed top-0 left-0 p-4 cursor-pointer hover:text-blue-700 duration-300 transition-all ease-in-out text-white z-50 text-2xl">←Back</div>
+    <div onClick={() => navigate('/')} className="fixed top-0 left-0 p-4 cursor-pointer hover:text-blue-700 duration-300 transition-all ease-in-out text-white z-50 text-2xl">←Back</div>
       {
         showErrorBox &&
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4">
