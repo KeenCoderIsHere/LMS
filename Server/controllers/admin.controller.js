@@ -77,6 +77,7 @@ export const signinAdmin = async (req, res, next) => {
 
 export const addBook = async (req, res, next) => {
   try{
+    console.log(req.body)
     const { title, copies, author, isbn, genre } = req.body
     const availBooks = await Book.findOne({ isbn: isbn })
     if(availBooks){
@@ -93,6 +94,12 @@ export const addBook = async (req, res, next) => {
       genre,
       with: []
     })
+    await redisClient.del('lms:books')
+    console.log("BOOK CREATED:")
+    console.log(books)
+
+    const allBooks = await Book.find({})
+    console.log("TOTAL BOOKS:", allBooks.length)
     return res.status(200).json({
       success: true,
       message: "Book added successfully!",
