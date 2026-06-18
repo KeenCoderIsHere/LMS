@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-
+import { BASE_URL } from '../config/env.js'
 const AdminSignIn = () => {
   const navigate = useNavigate()
   const [email,setEmail] = useState('')
@@ -36,7 +36,7 @@ const AdminSignIn = () => {
       setShowErrorBox(true)
       return
     }
-      const response = await fetch('http://localhost:5500/api/v1/admin/signin', {
+      const response = await fetch(`${BASE_URL}/api/v1/admin/signin`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

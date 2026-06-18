@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-
+import { BASE_URL } from '../config/env.js'
 const ViewStudents = () => {
   const [loading,setLoading] = useState(true)
   const [students,setStudents] = useState([])
@@ -9,7 +9,7 @@ const ViewStudents = () => {
     try{
       const token = localStorage.getItem('token')
       if(!token) return
-      const response = await fetch('http://localhost:5500/api/v1/admin/students', {
+      const response = await fetch(`${BASE_URL}/api/v1/admin/students`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

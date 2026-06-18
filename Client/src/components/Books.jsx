@@ -3,6 +3,7 @@
   import { useEffect } from 'react'
   import { useNavigate } from 'react-router-dom'
   import { Link } from 'react-router-dom'
+  import { BASE_URL } from '../config/env.js'
   const Books = () => {
     const [searchQuery,setSearchQuery] = useState('')
     const [isBorrowing,setIsBorrowing] = useState(false)
@@ -24,7 +25,7 @@
     const fetchData = async () => {
         try{
           const token = localStorage.getItem('token')
-          const response = await fetch('http://localhost:5500/api/v1/student/view-books', {
+          const response = await fetch(`${BASE_URL}/api/v1/student/view-books`, {
             method: "GET",
             headers: {
               'Content-Type': 'application/json',
@@ -46,7 +47,7 @@
       try{
         setLoading(true)
         const token = localStorage.getItem('token')
-        const response = await fetch('http://localhost:5500/api/v1/student/view-borrowed-books', {
+        const response = await fetch(`${BASE_URL}/api/v1/student/view-borrowed-books`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/type',
@@ -80,7 +81,7 @@
           return
         }
         const token = localStorage.getItem('token')
-        const response = await fetch(`http://localhost:5500/api/v1/student/borrow/${id}`, {
+        const response = await fetch(`${BASE_URL}/api/v1/student/borrow/${id}`, {
           method: "GET",
           headers: {
             'Content-Type': 'application/json',

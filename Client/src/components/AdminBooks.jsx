@@ -3,7 +3,7 @@
   import { useEffect } from 'react'
   import { useNavigate } from 'react-router-dom'
   import { Link } from 'react-router-dom'
-  //import redisClient from '../../../Server/config/redis'
+  import { BASE_URL } from '../config/env.js'
   const AdminBooks = () => {
     const [searchQuery,setSearchQuery] = useState('')
     if(!localStorage.getItem('token')){
@@ -23,7 +23,7 @@
     const fetchData = async () => {
         try{
           const token = localStorage.getItem('token')
-          const response = await fetch('http://localhost:5500/api/v1/student/view-books', {
+          const response = await fetch(`${BASE_URL}/api/v1/student/view-books`, {
             method: "GET",
             headers: {
               'Content-Type': 'application/json',

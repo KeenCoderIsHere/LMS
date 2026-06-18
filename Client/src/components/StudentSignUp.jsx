@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-
+import { BASE_URL } from '../config/env.js'
 const StudentSignUp = () => {
   const [email,setEmail] = useState('')
   const [name,setName] = useState('')
@@ -47,7 +47,7 @@ const StudentSignUp = () => {
     if(!validateCredentials()){
       return
     }
-    const response = await fetch('http://localhost:5500/api/v1/student/signup', {
+    const response = await fetch(`${BASE_URL}/api/v1/student/signup`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

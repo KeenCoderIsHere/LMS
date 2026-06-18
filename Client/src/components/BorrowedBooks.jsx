@@ -2,6 +2,7 @@ import React from 'react'
 import { useEffect } from 'react'
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { BASE_URL } from '../config/env.js'
 const BorrowedBooks = () => {
   const navigate = useNavigate()
   const [searchQuery,setSearchQuery] = useState('')
@@ -21,7 +22,7 @@ const BorrowedBooks = () => {
   const fetchData = async () => {
       const token = localStorage.getItem('token')
       try{
-        const response = await fetch('http://localhost:5500/api/v1/student/view-borrowed-books', {
+        const response = await fetch(`${BASE_URL}/api/v1/student/view-borrowed-books`, {
         method: "GET",
         headers: {
           'Content-Type': 'application/json',
@@ -47,7 +48,7 @@ const BorrowedBooks = () => {
     try{
       setLoading(true)
       const token = localStorage.getItem('token')
-      const response = await fetch(`http://localhost:5500/api/v1/student/return/${id}`, {
+      const response = await fetch(`${BASE_URL}/api/v1/student/return/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
