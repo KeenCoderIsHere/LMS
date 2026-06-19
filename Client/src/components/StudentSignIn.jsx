@@ -80,7 +80,7 @@ const StudentSignIn = () => {
     }
 
     <div
-      onClick={() => navigate(-1)}
+      onClick={() => navigate('/')}
       className="fixed top-6 left-6 z-50 flex items-center gap-2 text-white/80 hover:text-white cursor-pointer transition-all duration-300 text-lg font-medium"
     >
       ← Back
