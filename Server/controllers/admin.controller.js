@@ -8,17 +8,7 @@ import { Book } from "../models/book.model.js"
 import redisClient from "../config/redis.js"
 export const getAllStudents = async(req, res, next) => {
   try{
-    const DEFAULT_EXPIRATION = 3600
-    const cachedStudents = await redisClient.get('students')
-    if(cachedStudents){
-      console.log(cachedStudents)
-      return res.status(200).json({
-        success: true,
-        students: JSON.parse(cachedStudents)
-      })
-    } 
     const students = await Student.find({})
-    await redisClient.setEx('students', DEFAULT_EXPIRATION, JSON.stringify(students))
     console.log(students)
     res.status(200).json({
       success: true,
