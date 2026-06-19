@@ -4,6 +4,34 @@ import jwt from 'jsonwebtoken'
 import { Student } from "../models/student.model.js"
 import { Record } from "../models/record.model.js"
 import redisClient from '../config/redis.js'
+
+export const getAdminBooks = async (req, res, next) => {
+  try{
+    const DEFAULT_EXPIRATION = 3600
+    const cachedBooks = await redisClient.get('lms:books')
+    if(cachedBooks){
+      return res.status(200).json({
+        success: true,
+        books: JSON.parse(cachedBooks)
+      })
+    }
+    const books = await Book.find({ count: {$gt: 0} })
+    await redisClient.setEx(
+      'lms:books',
+      DEFAULT_EXPIRATION,
+      JSON.stringify(books)
+    )
+    return res.status(200).json({
+      success: true,
+      books
+    })
+  }
+  catch(error){
+    next(error)
+  }
+}
+
+
 export const getBooks = async (req, res, next) => {
   try{
     const DEFAULT_EXPIRATION = 3600
@@ -140,7 +168,8 @@ export const returnBook = async (req, res, next) => {
     if(found === false){
       return res.status(404).json({
         success: false,
-        message: "You didn't borrow this book, so unable to return!"
+        message: "You didn't borrow this book, so unable to return!",
+        student
       })
     }
     const y = await Book.findByIdAndUpdate(
