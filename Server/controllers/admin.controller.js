@@ -8,7 +8,7 @@ import { Book } from "../models/book.model.js"
 import redisClient from "../config/redis.js"
 export const getAllStudents = async(req, res, next) => {
   try{
-    const students = await Student.find({})
+    const students = await Student.find({}).populate('booksBorrowed', 'title')
     console.log(students)
     res.status(200).json({
       success: true,
