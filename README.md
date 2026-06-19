@@ -1,4 +1,3 @@
-```markdown
 # Library Management System
 
 [Live Demo](https://lms-mu-gilt.vercel.app/) | [GitHub Repository](https://github.com/KeenCoderIsHere/LMS)
@@ -502,4 +501,3 @@ Susheeth Venkatraman S
 GitHub: [KeenCoderIsHere](https://github.com/KeenCoderIsHere)  
 LinkedIn: [susheeth-venkatraman](https://www.linkedin.com/in/susheeth-venkatraman/)  
 Email: susheethvenkatraman@gmail.com
-```
