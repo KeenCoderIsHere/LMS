@@ -1,8 +1,11 @@
+```markdown
 # Library Management System
 
 [Live Demo](https://lms-mu-gilt.vercel.app/) | [GitHub Repository](https://github.com/KeenCoderIsHere/LMS)
 
 A full-stack library management system with role-based access control, Redis caching, and automated fine computation.
+
+---
 
 ## Features
 
@@ -58,6 +61,7 @@ A full-stack library management system with role-based access control, Redis cac
 - View pending dues.
 - Return borrowed books.
 
+---
 
 ## Technology Stack
 
@@ -77,6 +81,7 @@ A full-stack library management system with role-based access control, Redis cac
 
 **Styling:** Tailwind CSS
 
+---
 
 ## Architecture
 
@@ -90,6 +95,7 @@ The application follows the MVC pattern with a clear separation of concerns.
 
 **Caching Layer:** Redis caches book lists with a 1-hour TTL for student views and 5-minute TTL for admin views. Cache is invalidated when books are added or updated.
 
+---
 
 ## Getting Started
 
@@ -102,40 +108,52 @@ The application follows the MVC pattern with a clear separation of concerns.
 ### Installation
 
 1.  Clone the repository:
+    ```bash
     git clone https://github.com/KeenCoderIsHere/LMS.git
     cd LMS
+    ```
 
 2.  Install backend dependencies:
+    ```bash
     cd server
     npm install
+    ```
 
 3.  Install frontend dependencies:
+    ```bash
     cd client
     npm install
+    ```
 
 4.  Create a `.env` file in the server directory with the required environment variables.
 
 5.  Start the backend server:
+    ```bash
     cd server
     npm start
+    ```
 
 6.  Start the frontend development server:
+    ```bash
     cd client
     npm run dev
+    ```
 
 7.  Access the application at `http://localhost:5173`.
 
+---
 
 ## Environment Variables
 
 Create a `.env` file in the server directory with the following variables:
 
+```env
 PORT=5000
 DB_URI=mongodb://localhost:27017/lms
 JWT_SECRET=your_jwt_secret_key
 JWT_EXPIRES_IN=7d
 REDIS_URL=redis://localhost:6379
-
+```
 
 **Variable Descriptions:**
 
@@ -145,6 +163,7 @@ REDIS_URL=redis://localhost:6379
 - `JWT_EXPIRES_IN`: Token expiration duration (e.g., `7d`, `24h`). Default is `7d`.
 - `REDIS_URL`: Redis connection URL. Default is `redis://localhost:6379`.
 
+---
 
 ## API Documentation
 
