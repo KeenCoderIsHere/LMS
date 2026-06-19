@@ -8,8 +8,8 @@ const AdminAddBook = () => {
   const [showErrorBox,setShowErrorBox] = useState(false)
   const [error,setError] = useState('')
   const [title,setTitle] = useState('')
-  const [isbn,setIsbn] = useState(0)
-  const [copies,setCopies] = useState(0)
+  const [isbn,setIsbn] = useState('')
+  const [copies,setCopies] = useState('')
   const [author,setAuthor] = useState('')
   const [genre,setGenre] = useState('')
   const validate = () => {
@@ -52,7 +52,7 @@ const AdminAddBook = () => {
         body: JSON.stringify({
           title,
           author,
-          copies,
+          copies: Number(copies),
           isbn,
           genre
         })
@@ -65,7 +65,6 @@ const AdminAddBook = () => {
       else{
         setError('Book details added successfully!')
         setShowErrorBox(true)
-        navigate('/admin/dashboard')
       }
     } 
     catch(error){
@@ -73,52 +72,121 @@ const AdminAddBook = () => {
     }
   }
   return (
-    <>
-      {
-        showErrorBox &&
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4">
-          <div className="w-full max-w-md border-2 bg-gray-900 border-slate-700 rounded-xl p-8 shadow-2xl flex flex-col items-center gap-y-6">
-            <div className="text-white text-xl text-center leading-relaxed">
-              {error}
-            </div>
-            <button 
-              onClick={() => setShowErrorBox(false)}
-              className="text-blue-500 hover:text-blue-700 hover:underline cursor-pointer duration-300 transition-all ease-in-out"
+  <>
+    {
+      showErrorBox &&
+      <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+        <div className="w-full max-w-md bg-slate-900/95 border border-slate-700 rounded-3xl p-8 shadow-2xl flex flex-col items-center gap-8">
+          <div className="text-white text-lg text-center leading-relaxed">
+            {error}
+          </div>
+
+          <button
+            onClick={() => {
+              if(error === "Book details added successfully!"){
+                setShowErrorBox(false)
+                navigate('/admin/dashboard')
+              }
+              else{
+                setShowErrorBox(false)
+              }
+            }}
+            className="px-6 py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-semibold cursor-pointer transition-all duration-300"
+          >
+            OK
+          </button>
+        </div>
+      </div>
+    }
+
+    <div className="min-h-screen px-6 py-8">
+      <div
+        onClick={() => navigate(-1)}
+        className="fixed top-6 left-6 z-50 flex items-center gap-2 text-white/80 hover:text-white cursor-pointer transition-all duration-300 text-lg font-medium"
+      >
+        ← Back
+      </div>
+
+      <div className="max-w-3xl mx-auto">
+        <div className="text-5xl font-bold text-white text-center mb-12">
+          Add Book Form
+        </div>
+
+        <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl p-8 md:p-10">
+          <div className="flex flex-col gap-8">
+            <label className="flex flex-col gap-3 text-white font-medium">
+              Enter book title:
+              <input
+                placeholder=""
+                className="w-full bg-white/90 text-black px-4 py-3 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+                type="text"
+                required
+                value={title}
+                onChange={e => setTitle(e.target.value)}
+              />
+            </label>
+
+            <label className="flex flex-col gap-3 text-white font-medium">
+              Enter book ISBN:
+              <input
+                placeholder=""
+                className="w-full bg-white/90 text-black px-4 py-3 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+                type="number"
+                required
+                value={isbn}
+                onChange={e => setIsbn(e.target.value)}
+              />
+            </label>
+
+            <label className="flex flex-col gap-3 text-white font-medium">
+              Enter book author:
+              <input
+                placeholder=""
+                className="w-full bg-white/90 text-black px-4 py-3 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+                type="text"
+                required
+                value={author}
+                onChange={e => setAuthor(e.target.value)}
+              />
+            </label>
+
+            <label className="flex flex-col gap-3 text-white font-medium">
+              Enter number of book copies available:
+              <input
+                placeholder=""
+                className="w-full bg-white/90 text-black px-4 py-3 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+                type="number"
+                required
+                value={copies}
+                onChange={e => setCopies(e.target.value)}
+              />
+            </label>
+
+            <label className="flex flex-col gap-3 text-white font-medium">
+              Enter the book genre:
+              <input
+                placeholder=""
+                className="w-full bg-white/90 text-black px-4 py-3 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+                type="text"
+                required
+                value={genre}
+                onChange={e => setGenre(e.target.value)}
+              />
+            </label>
+
+            <button
+              type="submit"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 rounded-2xl cursor-pointer transition-all duration-300"
+              onClick={() => handleSubmit()}
             >
-              OK
+              Submit
             </button>
           </div>
         </div>
-      }
-      <div className='flex flex-col p-5'>
-        <div onClick={() => navigate(-1)} className="fixed top-0 left-0 p-4 cursor-pointer hover:text-blue-700 duration-300 transition-all ease-in-out text-white z-50 text-2xl">←Back</div>
-        <div className='text-3xl text-white text-center'>Add Book Form</div>
-        <div className='flex flex-col gap-y-7 items-center mt-20'>
-          <label className='text-white text-center'>
-            Enter book title: 
-            <input placeholder='' className='ml-5 text-black px-2 py-1' type='text' required value={title} onChange={e => setTitle(e.target.value)}/>
-          </label>
-          <label className='text-white text-center'>
-            Enter book ISBN: 
-            <input placeholder='' className='ml-5 text-black px-2 py-1' type='number' required value={isbn} onChange={e => setIsbn(parseInt(e.target.value))}/>
-          </label>
-          <label className='text-white text-center'>
-            Enter book author: 
-            <input placeholder='' className='ml-5 text-black px-2 py-1' type='text' required value={author} onChange={e => setAuthor(e.target.value)}/>
-          </label>
-          <label className='text-white text-center'>
-            Enter number of book copies available: 
-            <input placeholder='' className='ml-5 text-black px-2 py-1' type='number' required value={copies} onChange={e => setCopies(parseInt(e.target.value))}/>
-          </label>
-          <label className='text-white text-center'>
-            Enter the book genre: 
-            <input placeholder='' className='ml-5 text-black px-2 py-1' type='text' required value={genre} onChange={e => setGenre(e.target.value)}/>
-          </label>
-          <button type='submit' className='text-blue-500 hover:text-blue-700 hover:underline cursor-pointer duration-300 transition-all ease-in-out' onClick={() => handleSubmit()}>Submit</button>
-        </div>
       </div>
-    </>
-  )
+    </div>
+  </>
+)
 }
 
 export default AdminAddBook

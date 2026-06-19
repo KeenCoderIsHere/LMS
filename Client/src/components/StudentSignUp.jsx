@@ -69,23 +69,82 @@ const StudentSignUp = () => {
   }
   return (
     <>
-    <div onClick={() => navigate(-1)} className="fixed top-0 left-0 p-4 cursor-pointer hover:text-blue-700 duration-300 transition-all ease-in-out text-white z-50 text-2xl">←Back</div>
-      
-      <div className='flex flex-col text-white p-5 justify-center items-center'>
-          <div className='text-5xl text-center mb-[100px]'>Student Sign Up Page</div>
-          <form className='flex flex-col items-center justify-center gap-y-10 border-2 w-1/3 rounded-2xl border-gray-900 p-10 hover:translate-y-2 duration-300 ease-in-out transition-all'>
-            <input placeholder='Enter your name..' required type='email' className='rounded-full py-2 px-3 w-full text-black' onChange={e => setName(e.target.value)} value={name}/>
-            <input placeholder='Enter your email id..' type='email' className='rounded-full py-2 px-3 w-full text-black' onChange={e => setEmail(e.target.value)} value={email}/>
-            <input placeholder='Enter your password..' type='password' autoComplete='current-password webauthn' className='rounded-full py-2 px-3 w-full text-black' onChange={e => setPassword(e.target.value)} value={password}/>
-            <input placeholder='Confirm password..' type='password' autoComplete='current-password webauthn' className='rounded-full py-2 px-3 w-full text-black' onChange={e => setConfirmPassword(e.target.value)} value={confirmPassword}/>
-            <button className='text-blue-500 hover:text-blue-700 hover:underline cursor-pointer duration-300 transition-all ease-in-out' onClick={handleSubmit}>Signup</button>
-            <p className='text-blue-500 cursor-pointer hover:text-blue-600 duration-200 transition-all ease-in-out' onClick={e => handleNavigateLogin()}>Already have an account? Login.</p>
-            {
-              error && <p className='text-red-900 bold text-center'>{error}</p>
-            }
-          </form>
+  <div
+    onClick={() => navigate(-1)}
+    className="fixed top-6 left-6 z-50 flex items-center gap-2 text-white/80 hover:text-white cursor-pointer transition-all duration-300 text-lg font-medium"
+  >
+    ← Back
+  </div>
+
+  <div className="min-h-screen flex items-center justify-center px-6">
+    <div className="w-full max-w-md">
+      <div className="text-5xl font-bold text-white text-center mb-12">
+        Student Sign Up Page
       </div>
-    </>
+
+      <form className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-8 md:p-10 shadow-2xl flex flex-col gap-6">
+        <input
+          placeholder="Enter your name.."
+          required
+          type="email"
+          className="w-full bg-white/90 text-black px-4 py-3 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+          onChange={e => setName(e.target.value)}
+          value={name}
+        />
+
+        <input
+          placeholder="Enter your email id.."
+          type="email"
+          className="w-full bg-white/90 text-black px-4 py-3 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+          onChange={e => setEmail(e.target.value)}
+          value={email}
+        />
+
+        <input
+          placeholder="Enter your password.."
+          type="password"
+          autoComplete="current-password webauthn"
+          className="w-full bg-white/90 text-black px-4 py-3 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+          onChange={e => setPassword(e.target.value)}
+          value={password}
+        />
+
+        <input
+          placeholder="Confirm password.."
+          type="password"
+          autoComplete="current-password webauthn"
+          className="w-full bg-white/90 text-black px-4 py-3 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+          onChange={e => setConfirmPassword(e.target.value)}
+          value={confirmPassword}
+        />
+
+        <button
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-2xl cursor-pointer transition-all duration-300"
+          onClick={handleSubmit}
+        >
+          Signup
+        </button>
+
+        <p
+          className="text-center text-blue-400 hover:text-blue-300 cursor-pointer transition-all duration-300"
+          onClick={e => handleNavigateLogin()}
+        >
+          Already have an account? Login.
+        </p>
+
+        {
+          error && (
+            <div className="bg-red-500/10 border border-red-500/20 rounded-2xl px-4 py-3">
+              <p className="text-red-400 text-center font-medium">
+                {error}
+              </p>
+            </div>
+          )
+        }
+      </form>
+    </div>
+  </div>
+</>
   )
 }
 

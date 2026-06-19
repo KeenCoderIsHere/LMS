@@ -60,36 +60,74 @@ const StudentSignIn = () => {
     navigate('/student/signup')
   }
   return (
-  <>{
-
+  <>
+    {
       showErrorBox &&
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4">
-          <div className="w-full max-w-md border-2 bg-gray-900 border-slate-700 rounded-xl p-8 shadow-2xl flex flex-col items-center gap-y-6">
-            <div className="text-white text-xl text-center leading-relaxed">
-              {error}
-            </div>
-            <button 
-              onClick={() => setShowErrorBox(false)}
-              className="text-blue-500 hover:text-blue-700 hover:underline cursor-pointer duration-300 transition-all ease-in-out"
-            >
-              Got it
-            </button>
+      <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+        <div className="w-full max-w-md bg-slate-900/95 border border-slate-700 rounded-3xl p-8 shadow-2xl flex flex-col items-center gap-8">
+          <div className="text-white text-lg text-center leading-relaxed">
+            {error}
           </div>
+
+          <button
+            onClick={() => setShowErrorBox(false)}
+            className="px-6 py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-semibold cursor-pointer transition-all duration-300"
+          >
+            Got it
+          </button>
         </div>
+      </div>
     }
-  <div onClick={() => navigate(-1)} className="fixed top-0 left-0 p-4 cursor-pointer hover:text-blue-700 duration-300 transition-all ease-in-out text-white z-50 text-2xl">←Back</div>
-      
-    <div className='flex flex-col text-white p-5 justify-center items-center'>
-        <div className='text-5xl text-center mb-[100px]'>Student Login Page</div>
-        <form className='flex flex-col items-center justify-center gap-y-10 border-2 w-1/3 rounded-2xl border-gray-900 p-10 hover:translate-y-2 duration-300 ease-in-out transition-all'>
-          <input placeholder='Enter your email id..' type='email' className='rounded-full py-2 px-3 w-full text-black ' onChange={e => setEmail(e.target.value)} value={email}/>
-          <input placeholder='Enter your password..' type='password' autoComplete='current-password webauthn' className='text-black rounded-full py-2 px-3 w-full' onChange={e => setPassword(e.target.value)} value={password}/>
-          <button className='text-blue-500 hover:text-blue-700 hover:underline cursor-pointer duration-300 transition-all ease-in-out' onClick={handleSubmit}>Login</button>
-          <p className='text-blue-500 cursor-pointer hover:text-blue-600 duration-200 transition-all ease-in-out' onClick={handleNavigateSignUp}>Don't have an account? Sign up.</p>
+
+    <div
+      onClick={() => navigate(-1)}
+      className="fixed top-6 left-6 z-50 flex items-center gap-2 text-white/80 hover:text-white cursor-pointer transition-all duration-300 text-lg font-medium"
+    >
+      ← Back
+    </div>
+
+    <div className="min-h-screen flex items-center justify-center px-6">
+      <div className="w-full max-w-md">
+        <div className="text-5xl font-bold text-white text-center mb-12">
+          Student Login Page
+        </div>
+
+        <form className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-8 md:p-10 shadow-2xl flex flex-col gap-6">
+          <input
+            placeholder="Enter your email id.."
+            type="email"
+            className="w-full bg-white/90 text-black px-4 py-3 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+            onChange={e => setEmail(e.target.value)}
+            value={email}
+          />
+
+          <input
+            placeholder="Enter your password.."
+            type="password"
+            autoComplete="current-password webauthn"
+            className="w-full bg-white/90 text-black px-4 py-3 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+            onChange={e => setPassword(e.target.value)}
+            value={password}
+          />
+
+          <button
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-2xl cursor-pointer transition-all duration-300"
+            onClick={handleSubmit}
+          >
+            Login
+          </button>
+
+          <p
+            className="text-center text-blue-400 hover:text-blue-300 cursor-pointer transition-all duration-300"
+            onClick={handleNavigateSignUp}
+          >
+            Don't have an account? Sign up.
+          </p>
         </form>
+      </div>
     </div>
   </>
-  )
+)
 }
 
 export default StudentSignIn
