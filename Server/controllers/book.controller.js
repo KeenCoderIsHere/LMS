@@ -7,7 +7,7 @@ import redisClient from '../config/redis.js'
 
 export const getAdminBooks = async (req, res, next) => {
   try{
-    const DEFAULT_EXPIRATION = 3600
+    const DEFAULT_EXPIRATION = 300
     const cachedBooks = await redisClient.get('lms:books')
     if(cachedBooks){
       return res.status(200).json({
