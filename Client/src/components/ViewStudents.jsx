@@ -100,7 +100,7 @@ return (
                           <td className="py-4 px-6">
                             {
                               student.booksBorrowed.length > 0
-                                ? student.booksBorrowed.join(', ')
+                                ? student.booksBorrowed.map(book => book.title).join(', ')
                                 : 'No books borrowed'
                             }
                           </td>
