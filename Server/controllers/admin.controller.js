@@ -1,82 +1,81 @@
-import { JWT_EXPIRES_IN, JWT_SECRET } from "../config/env.js"
-import { Record } from "../models/record.model.js"
-import { Student } from "../models/student.model.js"
-import jwt from 'jsonwebtoken'
-import bcrypt from 'bcrypt'
-import Admin from '../models/admin.model.js'
-import { Book } from "../models/book.model.js"
-import redisClient from "../config/redis.js"
-export const getAllStudents = async(req, res, next) => {
-  try{
-    const students = await Student.find({}).populate('booksBorrowed', 'title')
-    console.log(students)
+import { JWT_EXPIRES_IN, JWT_SECRET } from '../config/env.js';
+import { Record } from '../models/record.model.js';
+import { Student } from '../models/student.model.js';
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
+import Admin from '../models/admin.model.js';
+import { Book } from '../models/book.model.js';
+import redisClient from '../config/redis.js';
+export const getAllStudents = async (req, res, next) => {
+  try {
+    const students = await Student.find({}).populate('booksBorrowed', 'title');
+    console.log(students);
     res.status(200).json({
       success: true,
-      students
-    })
+      students,
+    });
+  } catch (error) {
+    next(error);
   }
-  catch(error){
-    next(error)
-  }
-}
+};
 
 export const getAllRecords = async (req, res, next) => {
-  try{
-    const records = await Record.find({})
+  try {
+    const records = await Record.find({});
     res.status(200).json({
       success: true,
-      records
-    })
+      records,
+    });
+  } catch (error) {
+    next(error);
   }
-  catch(error){
-    next(error)
-  }
-}
+};
 
 export const signinAdmin = async (req, res, next) => {
-  try{
-    const { email, password } = req.body
-    const existingAdmin = await Admin.findOne({ email })
-    if(!existingAdmin){
+  try {
+    const { email, password } = req.body;
+    const existingAdmin = await Admin.findOne({ email });
+    if (!existingAdmin) {
       return res.status(404).json({
         success: false,
-        message: "No such admin found with given credentials"
-      })
+        message: 'No such admin found with given credentials',
+      });
     }
-    const isValidPassword = await bcrypt.compare(password, existingAdmin.password)
-    if(!isValidPassword){
+    const isValidPassword = await bcrypt.compare(password, existingAdmin.password);
+    if (!isValidPassword) {
       return res.status(404).json({
         success: false,
-        message: "Password doesn't match"
-      })
+        message: "Password doesn't match",
+      });
     }
-    const token = jwt.sign({ data: email, role: "admin" }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN })
+    const token = jwt.sign({ data: email, role: 'admin' }, JWT_SECRET, {
+      expiresIn: JWT_EXPIRES_IN,
+    });
 
     res.status(200).json({
       success: true,
-      message: "Admin Logged In Successfully!",
+      message: 'Admin Logged In Successfully!',
       data: {
         email,
         password: existingAdmin.password,
-        token
-      }
-    })
+        token,
+      },
+    });
+  } catch (error) {
+    next(error);
   }
-  catch(error){
-    next(error)
-  }
-}
+};
 
 export const addBook = async (req, res, next) => {
-  try{
-    console.log(req.body)
-    const { title, copies, author, isbn, genre } = req.body
-    const availBooks = await Book.findOne({ isbn: isbn })
-    if(availBooks){
+  try {
+    console.log(req.body);
+    const { title, copies, author, isbn, genre } = req.body;
+    const availBooks = await Book.findOne({ isbn: isbn });
+    if (availBooks) {
       return res.json({
         success: false,
-        message: "Book with same ISBN already exists!"
-      })
+        message: 'Book with same ISBN already exists!',
+      });
     }
     const books = await Book.create({
       title,
@@ -84,21 +83,20 @@ export const addBook = async (req, res, next) => {
       author,
       isbn,
       genre,
-      with: []
-    })
-    await redisClient.del('lms:books')
-    console.log("BOOK CREATED:")
-    console.log(books)
+      with: [],
+    });
+    await redisClient.del('lms:books');
+    console.log('BOOK CREATED:');
+    console.log(books);
 
-    const allBooks = await Book.find({})
-    console.log("TOTAL BOOKS:", allBooks.length)
+    const allBooks = await Book.find({});
+    console.log('TOTAL BOOKS:', allBooks.length);
     return res.status(200).json({
       success: true,
-      message: "Book added successfully!",
-      book: books
-    })
+      message: 'Book added successfully!',
+      book: books,
+    });
+  } catch (error) {
+    next(error);
   }
-  catch(error){
-    next(error)
-  }
-}
+};

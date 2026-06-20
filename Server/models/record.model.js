@@ -1,37 +1,40 @@
-import mongoose, { mongo } from "mongoose"
+import mongoose from 'mongoose';
 
-const recordSchema = new mongoose.Schema({
-  isbn: {
-    type: String,
-    required: true
+const recordSchema = new mongoose.Schema(
+  {
+    isbn: {
+      type: String,
+      required: true,
+    },
+    title: {
+      type: String,
+      required: true,
+    },
+    studentEmail: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    borrowedDate: {
+      type: String,
+      required: true,
+    },
+    dueDate: {
+      type: String,
+      required: true,
+    },
   },
-  title: {
-    type: String,
-    required: true
-  },
-  studentEmail: {
-    type: String,
-    required: true,
-    trim: true
-  },
-  borrowedDate: {
-    type: String,
-    required: true
-  },
-  dueDate: {
-    type: String,
-    required: true
-  }
-}, { timestamps: true })
+  { timestamps: true }
+);
 
-recordSchema.virtual('isOverdue').get(function() {
-  if (!this.dueDate) return false
-  const due = new Date(this.dueDate)
-  const today = new Date()
-  return due < today
-})
+recordSchema.virtual('isOverdue').get(function () {
+  if (!this.dueDate) return false;
+  const due = new Date(this.dueDate);
+  const today = new Date();
+  return due < today;
+});
 
-recordSchema.set('toJSON', { virtuals: true })
-recordSchema.set('toObject', { virtuals: true })
+recordSchema.set('toJSON', { virtuals: true });
+recordSchema.set('toObject', { virtuals: true });
 
-export const Record = mongoose.model('Record',recordSchema)
+export const Record = mongoose.model('Record', recordSchema);

@@ -1,13 +1,12 @@
 const errorMiddleware = async (err, req, res, next) => {
-  try{
+  try {
     res.status(err.statusCode || err.status || 500).json({
       success: false,
-      message: err.message || "Internal Server Error"
-    })
+      message: err.message || 'Internal Server Error',
+    });
+  } catch (error) {
+    next(error);
   }
-  catch(error){
-    next(error)
-  }
-}
+};
 
-export default errorMiddleware
+export default errorMiddleware;
